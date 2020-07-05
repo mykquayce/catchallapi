@@ -7,23 +7,22 @@ namespace CatchAllApi.Tests.Fixtures
 {
 	public class HttpClientFixture : IDisposable
 	{
-		private readonly TestServer _testServer;
-
 		public HttpClientFixture()
 		{
 			var builder = new WebHostBuilder()
 				.UseStartup<WebApplication.Startup>();
 
-			_testServer = new TestServer(builder);
-			HttpClient = _testServer.CreateClient();
+			TestServer = new TestServer(builder);
+			HttpClient = TestServer.CreateClient();
 		}
 
 		public HttpClient HttpClient { get; }
+		public TestServer TestServer { get; }
 
 		public void Dispose()
 		{
 			HttpClient?.Dispose();
-			_testServer?.Dispose();
+			TestServer?.Dispose();
 		}
 	}
 }
