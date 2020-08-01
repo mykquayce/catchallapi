@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -20,7 +21,12 @@ namespace CatchAllApi.WebApplication
 			Host.CreateDefaultBuilder(args)
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
-					webBuilder.UseStartup<Startup>();
+					var path = Path.Combine(Path.DirectorySeparatorChar.ToString(), "run", "secrets", "kestrel_certificates_default_password");
+					var kestrelCertificatesDefaultPassword = File.ReadAllText(path).Trim();
+
+					webBuilder
+						.UseSetting("Kestrel:Certificates:Default:Password", kestrelCertificatesDefaultPassword)
+						.UseStartup<Startup>();
 				});
 	}
 }

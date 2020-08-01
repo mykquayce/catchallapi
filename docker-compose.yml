@@ -5,6 +5,21 @@ services:
   api:
     image: eassbhhtgu/catchallapi:latest
     environment:
-    - ASPNETCORE_ENVIRONMENT=Production
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTPS_PORT: '5001'
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /run/secrets/kestrel_certificate
+      ASPNETCORE_URLS: https://+;http://+
     ports:
     - 5000:80/tcp
+    - 5001:443/tcp
+    secrets:
+    - source: kestrel_certificate
+    - source: kestrel_certificates_default_password
+
+secrets:
+  kestrel_certificate:
+    external: true
+    name: kestrel_certificate
+  kestrel_certificates_default_password:
+    external: true
+    name: kestrel_certificates_default_password
