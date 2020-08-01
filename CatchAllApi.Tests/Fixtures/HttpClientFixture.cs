@@ -1,28 +1,17 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using System;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http;
 
 namespace CatchAllApi.Tests.Fixtures
 {
-	public class HttpClientFixture : IDisposable
+	public class HttpClientFixture : WebApplicationFactory<CatchAllApi.WebApplication.Startup>
 	{
-		public HttpClientFixture()
+		private readonly static WebApplicationFactoryClientOptions _options = new WebApplicationFactoryClientOptions
 		{
-			var builder = new WebHostBuilder()
-				.UseStartup<WebApplication.Startup>();
+			AllowAutoRedirect = false,
+		};
 
-			TestServer = new TestServer(builder);
-			HttpClient = TestServer.CreateClient();
-		}
+		private HttpClient? _httpClient;
 
-		public HttpClient HttpClient { get; }
-		public TestServer TestServer { get; }
-
-		public void Dispose()
-		{
-			HttpClient?.Dispose();
-			TestServer?.Dispose();
-		}
+		public HttpClient HttpClient => _httpClient ??= base.CreateClient(_options);
 	}
 }
