@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -19,13 +20,14 @@ namespace CatchAllApi.WebApplication
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 			Host.CreateDefaultBuilder(args)
+				.ConfigureAppConfiguration(builder =>
+				{
+					builder
+						.AddDockerSecret(fileName: "kestrel_certificates_default_password", configKey: "Kestrel:Certificates:Default:Password", optional: true, reloadOnChange: true);
+				})
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
-					var path = Path.Combine(Path.DirectorySeparatorChar.ToString(), "run", "secrets", "kestrel_certificates_default_password");
-					var kestrelCertificatesDefaultPassword = File.ReadAllText(path).Trim();
-
 					webBuilder
-						.UseSetting("Kestrel:Certificates:Default:Password", kestrelCertificatesDefaultPassword)
 						.UseStartup<Startup>();
 				});
 	}
