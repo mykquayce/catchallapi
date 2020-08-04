@@ -4,7 +4,7 @@ openssl rand -base64 99 | sed 's/[^0-9A-Za-z]//g' | sed -z 's/\n//g'
 ```
 Create a Docker secret for the password:
 ```bash
-echo .. | docker secret create kestrel_certificates_default_password -
+echo -n .. | docker secret create kestrel_certificates_default_password -
 ```
 Export the self-signed certificate with the password:
 ```bash
